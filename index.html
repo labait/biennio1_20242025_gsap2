@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/ScrollTrigger.min.js"></script>
+  
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    section {
+      width: 100vw;
+      height: 100vh;
+    }
+    .burger {
+      width: 50vw;
+      .pieces {
+        position: relative;
+        .piece {
+          width: 100%;
+          height: 450px;
+          display: block;
+          position: absolute;
+          img {
+            position: absolute;
+          }
+          &:nth-child(1) img { /* bread bootom */
+            bottom: 0;
+          }
+          &:nth-child(2) img { /* cheese */
+            top: 60%;
+          }
+          &:nth-child(3) img { /* meat */
+            top: 52%;
+          }
+          &:nth-child(4) img { 
+            top: 45%;
+          }
+          &:nth-child(5) img { /* bacon */
+            top: 40%;
+          }
+          &:nth-child(6) img { 
+            top: 28%;
+          }
+        }
+        
+      }
+    }
+
+    body.debug{
+      section, .piece{
+        border: 1px solid black;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <section id="section1">
+    <div class="flex items-center justify-center min-h-screen">
+      <div class="burger">
+        <div class="pieces">
+          <div class="piece"><img src="./images/burger_7.png" alt=""></div>
+          <div class="piece"><img src="./images/burger_6.png" alt=""></div>
+          <div class="piece"><img src="./images/burger_5.png" alt=""></div>
+          <div class="piece"><img src="./images/burger_4.png" alt=""></div>
+          <div class="piece"><img src="./images/burger_3.png" alt=""></div>
+          <div class="piece"><img src="./images/burger_2.png" alt=""></div>
+          <div class="piece"><img src="./images/burger_1.png" alt=""></div>
+        </div> 
+      </div>
+    </div>
+  </section>
+  <section id="section2"></section>
+  
+  <script>
+    const debug = true; 
+    const maxOffsetX = 200;
+    const maxRotaion = 40;
+
+    if(debug) document.getElementsByTagName('body')[0].classList.add('debug');
+    const anim = () => {
+      gsap.registerPlugin(ScrollTrigger);
+      const pieces = document.querySelectorAll('.burger .pieces .piece');
+      const tl1 = gsap.timeline();
+      pieces.forEach((piece, index) => {
+        const randomRotation = -maxRotaion + Math.random() * maxRotaion * 2;
+        const randomOffsetX = -maxOffsetX + Math.random() * maxOffsetX * 2;
+        tl1.from(
+          piece, 
+          1,
+          {
+            y: -1000, 
+            x: randomOffsetX, 
+            scale: 1.2, 
+            rotation: randomRotation,
+            ease: "elastic.out(0.2, 0.3)", 
+            onComplete: () => {
+              console.log(`piece ${index}`);
+            }
+          }, 
+          0.2*index
+          );
+      });
+      ScrollTrigger.create({
+        animation: tl1,
+        trigger: '#section1',
+        start: 'top top',
+        end: '6000 top',
+        scrub: 1,
+        pin: true,
+        markers: debug
+      });
+    }
+    
+    document.addEventListener('DOMContentLoaded',anim);
+  </script>
+</body>
+</html>
